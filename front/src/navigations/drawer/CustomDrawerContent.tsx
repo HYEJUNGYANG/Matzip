@@ -26,6 +26,13 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
                 style={styles.userImage}
               />
             )}
+            {/* kakao로그인을 한 유저이면서, 프로필 이미지를 앱에 저장하는 것을 허용한 유저 */}
+            {imageUri === null && !!kakaoImageUri && (
+              <Image source={{uri: kakaoImageUri}} style={styles.userImage} />
+            )}
+            {imageUri !== null && (
+              <Image source={{uri: imageUri}} style={styles.userImage} />
+            )}
           </View>
           <Text style={styles.nameText}>{nickname ?? email}</Text>
         </View>

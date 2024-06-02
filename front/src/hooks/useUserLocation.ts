@@ -6,8 +6,8 @@ import useAppState from './useAppState';
 function useUserLocation() {
   const [userLocation, SetUserLocation] = useState<LatLng>({
     // 초기에 위치값이 없을 경우
-    latitude: 37.5519,
-    longitude: 126.9918,
+    latitude: 35.1347409,
+    longitude: 129.0930551,
   });
   const [isUserLocationError, setIsUserLocationError] = useState(false);
   const {isComback} = useAppState();
