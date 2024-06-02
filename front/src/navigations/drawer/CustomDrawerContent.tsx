@@ -11,7 +11,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
   const {getProfileQuery} = useAuth();
   console.log('data ', getProfileQuery.data);
 
-  // const {email} = getProfileQuery.data || {};
+  const {email, nickname, imageUri, kakaoImageUri} = getProfileQuery.data || {};
   return (
     <SafeAreaView style={styles.container}>
       <DrawerContentScrollView
@@ -19,7 +19,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
         scrollEnabled={false}
         contentContainerStyle={styles.contentContainer}>
         <View style={styles.userInfoContainer}>
-          {/* <View style={styles.userImageContainer}>
+          <View style={styles.userImageContainer}>
             {imageUri === null && kakaoImageUri === null && (
               <Image
                 source={require('@/assets/user-default.png')}
@@ -27,7 +27,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
               />
             )}
           </View>
-          <Text style={styles.nameText}>{nickname ?? email}</Text> */}
+          <Text style={styles.nameText}>{nickname ?? email}</Text>
         </View>
 
         {/* 이 컴포넌트 추가 안하면 drawer list 안보임 */}
