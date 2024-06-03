@@ -44,7 +44,10 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
     createPost.mutate(
       {address, ...location, ...body},
       {
-        onSuccess: () => navigation.goBack(),
+        onSuccess: data => {
+          console.log(data);
+          navigation.goBack();
+        },
         onError: e => console.log(e),
       },
     );
@@ -55,6 +58,8 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
     navigation.setOptions({
       headerRight: () => AddPostHeaderRight(handleSubmit),
     });
+
+    return () => console.log('unmount');
   });
 
   return (
@@ -77,11 +82,7 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
             blurOnSubmit={false}
             onSubmitEditing={() => descriptionRef.current?.focus()}
             {...addPost.getTextInputProps('title')}
-            // value={values.email}
-            // onChangeText={text => handleChangeText('email', text)}
-            // onBlur={() => handleBlur('email')}
           />
-          {/* inputField에서 secureTextEntry -> input password 속성처럼 마스킹처리 */}
           <InputField
             ref={descriptionRef}
             placeholder="기록하고 싶은 내용을 입력하세요. (선택)"
@@ -90,9 +91,6 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
             multiline // 여러 줄
             returnKeyType="next"
             {...addPost.getTextInputProps('description')}
-            // value={values.password}
-            // onChangeText={text => handleChangeText('password', text)}
-            // onBlur={() => handleBlur('password')}
           />
         </View>
       </ScrollView>
