@@ -7,7 +7,7 @@ import {
   TextInputProps,
   View,
 } from 'react-native';
-import React, {ForwardedRef, forwardRef, useRef} from 'react';
+import React, {ForwardedRef, ReactNode, forwardRef, useRef} from 'react';
 import {colors} from '../constants';
 import {mergeRefs} from '../utils';
 
@@ -15,6 +15,7 @@ interface InputFieldProps extends TextInputProps {
   disabled?: boolean;
   error?: string;
   touched?: boolean;
+  icon?: ReactNode;
 }
 
 // 디바이스의 높이 가져옴
@@ -22,7 +23,7 @@ const deviceHeight = Dimensions.get('screen').height;
 
 const InputField = forwardRef(
   (
-    {disabled = false, error, touched, ...props}: InputFieldProps,
+    {disabled = false, error, touched, icon = null, ...props}: InputFieldProps,
     ref?: ForwardedRef<TextInput>,
   ) => {
     const inputRef = useRef<TextInput | null>(null);
@@ -38,19 +39,23 @@ const InputField = forwardRef(
           style={[
             styles.container,
             disabled && styles.disabled,
+            props.multiline && styles.multiline,
             touched && Boolean(error) && styles.inputError,
           ]}>
-          <TextInput
-            ref={ref ? mergeRefs(inputRef, ref) : inputRef}
-            // false일 때는 편집 가능
-            editable={!disabled}
-            placeholderTextColor={colors.GRAY_500}
-            style={[styles.input, disabled && styles.disabled]}
-            {...props}
-            autoCapitalize="none" // 자동 대문자 방지
-            spellCheck={false}
-            autoCorrect={false}
-          />
+          <View style={Boolean(icon) && styles.innerContainer}>
+            {icon}
+            <TextInput
+              ref={ref ? mergeRefs(inputRef, ref) : inputRef}
+              // false일 때는 편집 가능
+              editable={!disabled}
+              placeholderTextColor={colors.GRAY_500}
+              style={[styles.input, disabled && styles.disabled]}
+              {...props}
+              autoCapitalize="none" // 자동 대문자 방지
+              spellCheck={false}
+              autoCorrect={false}
+            />
+          </View>
           {/* error 메세지가 있을 때만 해당 컴포넌트 표시하기 위해 string 타입을 Boolean으로 변경 */}
           {touched && Boolean(error) && (
             <Text style={styles.error}>{error}</Text>
@@ -68,6 +73,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.GRAY_200,
     padding: deviceHeight > 700 ? 15 : 10,
+  },
+  innerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  multiline: {
+    paddingBottom: deviceHeight > 700 ? 45 : 30,
   },
   input: {
     fontSize: 16,
