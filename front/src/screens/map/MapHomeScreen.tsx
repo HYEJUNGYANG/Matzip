@@ -20,6 +20,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import mapStyle from '@/style/mapStyle';
 import CustomMarker from '@/components/CustomMarker';
+import useGetMarkers from '@/hooks/queries/useGetMarkers';
 
 // Map스크린은 Stack도 되면서 Drawer도 되므로 스크린 타입을 합쳐줄 수 있음
 type Navigation = CompositeNavigationProp<
@@ -33,6 +34,7 @@ function MapHomeScreen() {
   const mapRef = useRef<MapView | null>(null);
   const {userLocation, isUserLocationError} = useUserLocation();
   const [selectLocation, setSelectLocation] = useState<LatLng | null>();
+  const {data: markers = []} = useGetMarkers();
   usePermission('LOCATION');
 
   const handleLongPressMapView = ({nativeEvent}: LongPressEvent) => {
@@ -79,12 +81,14 @@ function MapHomeScreen() {
         showsMyLocationButton={false} // 내 위치 보여줌
         customMapStyle={mapStyle}
         onLongPress={handleLongPressMapView}>
-        {/* 위도, 경도 값을 받아서 해당 위치에 Marker 표시 */}
-        <CustomMarker
-          color="RED"
-          score={1}
-          coordinate={{latitude: 35.1347409, longitude: 129.0930551}}
-        />
+        {markers.map(({id, color, score, ...coordinate}) => (
+          <CustomMarker
+            key={id}
+            color={color}
+            score={score}
+            coordinate={coordinate}
+          />
+        ))}
         {selectLocation && (
           <Callout>
             <Marker coordinate={selectLocation} />
