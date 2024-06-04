@@ -4,8 +4,6 @@ import {useEffect, useState} from 'react';
 import Config from 'react-native-config';
 import {LatLng} from 'react-native-maps';
 
-console.log('Config.Google_API_KEY', Config.GOOGLE_API_KEY);
-
 function useGetAddress(location: LatLng) {
   const {latitude, longitude} = location;
   const [result, setResult] = useState('');

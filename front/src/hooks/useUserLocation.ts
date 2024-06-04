@@ -12,8 +12,6 @@ function useUserLocation() {
   const [isUserLocationError, setIsUserLocationError] = useState(false);
   const {isComback} = useAppState();
 
-  console.log('isComback', isComback);
-
   // 1. 나의 위치를 구하고
   // 2. 지도를 그곳으로 이동
   useEffect(() => {
