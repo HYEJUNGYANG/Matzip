@@ -1,13 +1,21 @@
+import {colors} from '@/constants';
 import {ImageUri} from '@/types';
 import React from 'react';
 import {Image, Pressable} from 'react-native';
 import {Platform, ScrollView, StyleSheet, View} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface PreviewImageListProps {
   imageUris: ImageUri[];
+  onDelete?: (uri: string) => void;
+  onChangeOrder?: (fromIndex: number, toIndex: number) => void;
 }
 
-function PreviewImageList({imageUris}: PreviewImageListProps) {
+function PreviewImageList({
+  imageUris,
+  onDelete,
+  onChangeOrder,
+}: PreviewImageListProps) {
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <View style={styles.container}>
@@ -26,6 +34,35 @@ function PreviewImageList({imageUris}: PreviewImageListProps) {
                 }}
                 style={styles.image}
               />
+              <Pressable
+                style={[styles.imageButton, styles.deleteButton]}
+                onPress={() => onDelete && onDelete(uri)}>
+                <Ionicons name="close" size={16} color={colors.WHITE} />
+              </Pressable>
+
+              {idx > 0 && (
+                <Pressable
+                  style={[styles.imageButton, styles.moveLeftButton]}
+                  onPress={() => onChangeOrder && onChangeOrder(idx, idx - 1)}>
+                  <Ionicons
+                    name="arrow-back-outline"
+                    size={16}
+                    color={colors.WHITE}
+                  />
+                </Pressable>
+              )}
+
+              {idx < imageUris.length - 1 && (
+                <Pressable
+                  style={[styles.imageButton, styles.moveRightButton]}
+                  onPress={() => onChangeOrder && onChangeOrder(idx, idx + 1)}>
+                  <Ionicons
+                    name="arrow-forward-outline"
+                    size={16}
+                    color={colors.WHITE}
+                  />
+                </Pressable>
+              )}
             </Pressable>
           );
         })}
@@ -47,6 +84,23 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
+  },
+  imageButton: {
+    position: 'absolute',
+    backgroundColor: colors.BLACK,
+    zIndex: 1,
+  },
+  deleteButton: {
+    top: 0,
+    right: 0,
+  },
+  moveLeftButton: {
+    bottom: 0,
+    left: 0,
+  },
+  moveRightButton: {
+    bottom: 0,
+    right: 0,
   },
 });
 
