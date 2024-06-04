@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   textContainer: {
+    width: Dimensions.get('screen').width / 2 - 25,
     marginTop: 7,
     gap: 2,
   },

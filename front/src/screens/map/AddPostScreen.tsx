@@ -107,7 +107,7 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
         <View style={styles.inputContainer}>
           <InputField
             value={address}
-            disabled
+            disabled // 편집 불가능 readonly
             icon={
               <Octicons name="location" size={16} color={colors.GRAY_500} />
             }
