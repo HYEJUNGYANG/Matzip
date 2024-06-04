@@ -21,6 +21,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import mapStyle from '@/style/mapStyle';
 import CustomMarker from '@/components/CustomMarker';
 import useGetMarkers from '@/hooks/queries/useGetMarkers';
+import useModal from '@/hooks/useModal';
+import MarkerModal from '@/components/MarkerModal';
 
 // Map스크린은 Stack도 되면서 Drawer도 되므로 스크린 타입을 합쳐줄 수 있음
 type Navigation = CompositeNavigationProp<
@@ -34,8 +36,27 @@ function MapHomeScreen() {
   const mapRef = useRef<MapView | null>(null);
   const {userLocation, isUserLocationError} = useUserLocation();
   const [selectLocation, setSelectLocation] = useState<LatLng | null>();
+  const [markerId, setMarkerId] = useState<number | null>(null);
   const {data: markers = []} = useGetMarkers();
+  const markerModal = useModal();
   usePermission('LOCATION');
+
+  const moveMapView = (coordinate: LatLng) => {
+    // 넣어준 곳으로 이동
+    mapRef.current?.animateToRegion({
+      ...coordinate,
+      // 확대 정도(델타)
+      latitudeDelta: 0.00522,
+      longitudeDelta: 0.000421,
+    });
+  };
+
+  // 특정 마크 눌렀을 때 그 부분으로 이동(마커가 정 중앙에 오도록)
+  const handlePressMarker = (id: number, coordinate: LatLng) => {
+    moveMapView(coordinate);
+    setMarkerId(id);
+    markerModal.show();
+  };
 
   const handleLongPressMapView = ({nativeEvent}: LongPressEvent) => {
     setSelectLocation(nativeEvent.coordinate);
@@ -60,14 +81,7 @@ function MapHomeScreen() {
       // 에러 메세지 표시
       return;
     }
-    // 넣어준 곳으로 이동
-    mapRef.current?.animateToRegion({
-      latitude: userLocation.latitude,
-      longitude: userLocation.longitude,
-      // 확대 정도(델타)
-      latitudeDelta: 0.00522,
-      longitudeDelta: 0.000421,
-    });
+    moveMapView(userLocation);
   };
 
   return (
@@ -93,6 +107,7 @@ function MapHomeScreen() {
             color={color}
             score={score}
             coordinate={coordinate}
+            onPress={() => handlePressMarker(id, coordinate)}
           />
         ))}
         {selectLocation && (
@@ -115,6 +130,12 @@ function MapHomeScreen() {
           <MaterialIcons name="my-location" color={colors.WHITE} size={25} />
         </Pressable>
       </View>
+
+      <MarkerModal
+        markerId={markerId}
+        isVisible={markerModal.isVisible}
+        hide={markerModal.hide}
+      />
     </>
   );
 }
