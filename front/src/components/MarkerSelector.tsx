@@ -30,9 +30,10 @@ function MarkerSelector({
       {/* showsHorizontalScrollIndicator: scrollBar 보여주는 옵션 (true-> 보여줌, false->안보여줌) */}
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View style={styles.markerInputScroll}>
-          {categoryList.map(color => {
+          {categoryList.map((color, idx) => {
             return (
               <Pressable
+                key={idx}
                 style={[
                   styles.markerBox,
                   markerColor === color && styles.pressedMarker,

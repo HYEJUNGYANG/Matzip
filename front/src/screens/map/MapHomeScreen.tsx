@@ -80,7 +80,13 @@ function MapHomeScreen() {
         followsUserLocation
         showsMyLocationButton={false} // 내 위치 보여줌
         customMapStyle={mapStyle}
-        onLongPress={handleLongPressMapView}>
+        onLongPress={handleLongPressMapView}
+        // 앱 초기에 보여줄 위치 설정
+        region={{
+          ...userLocation,
+          latitudeDelta: 0.00522,
+          longitudeDelta: 0.000421,
+        }}>
         {markers.map(({id, color, score, ...coordinate}) => (
           <CustomMarker
             key={id}

@@ -35,6 +35,7 @@ function CustomMarker({
       </View>
     </View>
   );
+
   return coordinate ? (
     <Marker coordinate={coordinate} {...props}>
       {markerView}
