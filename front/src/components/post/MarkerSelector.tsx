@@ -1,6 +1,6 @@
 import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import CustomMarker from './CustomMarker';
+import CustomMarker from '../common/CustomMarker';
 import {colors} from '@/constants';
 import {MarkerColor} from '@/types';
 

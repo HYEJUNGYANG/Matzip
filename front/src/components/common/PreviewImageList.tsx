@@ -9,21 +9,22 @@ interface PreviewImageListProps {
   imageUris: ImageUri[];
   onDelete?: (uri: string) => void;
   onChangeOrder?: (fromIndex: number, toIndex: number) => void;
+  showOption?: boolean;
 }
 
 function PreviewImageList({
   imageUris,
   onDelete,
   onChangeOrder,
+  showOption = false,
 }: PreviewImageListProps) {
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <View style={styles.container}>
         {imageUris.map(({uri}, idx) => {
           return (
-            <Pressable style={styles.imageContainer}>
+            <Pressable key={idx} style={styles.imageContainer}>
               <Image
-                key={idx}
                 resizeMode="cover"
                 source={{
                   uri: `${
@@ -34,34 +35,42 @@ function PreviewImageList({
                 }}
                 style={styles.image}
               />
-              <Pressable
-                style={[styles.imageButton, styles.deleteButton]}
-                onPress={() => onDelete && onDelete(uri)}>
-                <Ionicons name="close" size={16} color={colors.WHITE} />
-              </Pressable>
+              {showOption && (
+                <>
+                  <Pressable
+                    style={[styles.imageButton, styles.deleteButton]}
+                    onPress={() => onDelete && onDelete(uri)}>
+                    <Ionicons name="close" size={16} color={colors.WHITE} />
+                  </Pressable>
 
-              {idx > 0 && (
-                <Pressable
-                  style={[styles.imageButton, styles.moveLeftButton]}
-                  onPress={() => onChangeOrder && onChangeOrder(idx, idx - 1)}>
-                  <Ionicons
-                    name="arrow-back-outline"
-                    size={16}
-                    color={colors.WHITE}
-                  />
-                </Pressable>
-              )}
+                  {idx > 0 && (
+                    <Pressable
+                      style={[styles.imageButton, styles.moveLeftButton]}
+                      onPress={() =>
+                        onChangeOrder && onChangeOrder(idx, idx - 1)
+                      }>
+                      <Ionicons
+                        name="arrow-back-outline"
+                        size={16}
+                        color={colors.WHITE}
+                      />
+                    </Pressable>
+                  )}
 
-              {idx < imageUris.length - 1 && (
-                <Pressable
-                  style={[styles.imageButton, styles.moveRightButton]}
-                  onPress={() => onChangeOrder && onChangeOrder(idx, idx + 1)}>
-                  <Ionicons
-                    name="arrow-forward-outline"
-                    size={16}
-                    color={colors.WHITE}
-                  />
-                </Pressable>
+                  {idx < imageUris.length - 1 && (
+                    <Pressable
+                      style={[styles.imageButton, styles.moveRightButton]}
+                      onPress={() =>
+                        onChangeOrder && onChangeOrder(idx, idx + 1)
+                      }>
+                      <Ionicons
+                        name="arrow-forward-outline"
+                        size={16}
+                        color={colors.WHITE}
+                      />
+                    </Pressable>
+                  )}
+                </>
               )}
             </Pressable>
           );

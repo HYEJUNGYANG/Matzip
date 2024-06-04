@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import {colors} from '../constants';
+import {colors} from '@/constants';
 
 interface CustomButtonProps extends PressableProps {
   label: string;

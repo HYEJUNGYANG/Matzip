@@ -8,8 +8,8 @@ import {
   View,
 } from 'react-native';
 import React, {ForwardedRef, ReactNode, forwardRef, useRef} from 'react';
-import {colors} from '../constants';
-import {mergeRefs} from '../utils';
+import {colors} from '@/constants';
+import {mergeRefs} from '@/utils';
 
 interface InputFieldProps extends TextInputProps {
   disabled?: boolean;

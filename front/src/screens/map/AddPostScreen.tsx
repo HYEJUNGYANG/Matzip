@@ -11,24 +11,24 @@ import React, {useEffect, useRef, useState} from 'react';
 import {StackScreenProps} from '@react-navigation/stack';
 import {MapStackParamList} from '@/navigations/stack/MapStackNavigator';
 import {colors, mapNavigations} from '@/constants';
-import InputField from '@/components/InputField';
 import Octicons from 'react-native-vector-icons/Octicons';
-import CustomButton from '@/components/CustomButton';
 import useForm from '@/hooks/useForm';
 import {TextInput} from 'react-native';
 import {getDateWithSeparator, validateAddPost} from '@/utils';
-import AddPostHeaderRight from '@/components/AddPostHeaderRight';
 import useMutateCreatePost from '@/hooks/queries/useMutateCreatePost';
 import {MarkerColor} from '@/types';
 import useGetAddress from '@/hooks/useGetAddress';
-import MarkerSelector from '@/components/MarkerSelector';
-import ScoreInput from '@/components/ScoreInput';
-import DatePickerOptions from '@/components/DatePickerOptions';
+import ScoreInput from '@/components/post/ScoreInput';
+import DatePickerOptions from '@/components/post/DatePickerOptions';
 import useModal from '@/hooks/useModal';
-import ImageInput from '@/components/ImageInput';
+import ImageInput from '@/components/post/ImageInput';
 import usePermission from '@/hooks/usePermission';
 import useImagePicker from '@/hooks/useImagePicker';
-import PreviewImageList from '@/components/PreviewImageList';
+import AddPostHeaderRight from '@/components/post/AddPostHeaderRight';
+import InputField from '@/components/common/InputField';
+import CustomButton from '@/components/common/CustomButton';
+import MarkerSelector from '@/components/post/MarkerSelector';
+import PreviewImageList from '@/components/common/PreviewImageList';
 
 type AddPostScreenProps = StackScreenProps<
   MapStackParamList,
@@ -148,6 +148,7 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
               imageUris={imagePicker.imageUris}
               onDelete={imagePicker.delete}
               onChangeOrder={imagePicker.changeOrder}
+              showOption
             />
           </View>
           <DatePickerOptions
