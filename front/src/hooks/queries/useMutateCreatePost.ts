@@ -11,6 +11,10 @@ function useMutateCreatePost(mutationOptions?: UseMutationCustomOptions) {
     // 이 방법들은(1, 2) 서버에서 요청이 성공했을 때 어떤 데이터를 response로 내려줄 때 사용하면 좋음
     // 상황에 맞게 골라서
     onSuccess: newPost => {
+      // 지도에서 마커 새로 등록했을 때 피드 탭가면 바로 반영 안되는 문제 -> 피드를 불러오는 쿼리를 무효화
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.POST, queryKeys.GET_POST],
+      });
       // 1.쿼리 무효화
       // queryClient.invalidateQueries({
       //   queryKey: [queryKeys.MARKER, queryKeys.GET_MARKERS],
