@@ -1,9 +1,19 @@
 import CustomButton from '@/components/common/CustomButton';
 import PreviewImageList from '@/components/common/PreviewImageList';
-import {colorHex, colors, feedNavigations} from '@/constants';
+import {
+  colorHex,
+  colors,
+  feedNavigations,
+  mainNavigations,
+  mapNavigations,
+} from '@/constants';
 import useGetPost from '@/hooks/queries/useGetPost';
+import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
 import {FeedStackParamList} from '@/navigations/stack/FeedStackNavigator';
+import useLocationStore from '@/store/useLocationStore';
 import {getDateLocaleFormat, getDateWithSeparator} from '@/utils';
+import {DrawerScreenProps} from '@react-navigation/drawer';
+import {CompositeScreenProps} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
 import {
@@ -21,19 +31,29 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Octicons from 'react-native-vector-icons/Octicons';
 
-type FeedDetailScreenProps = StackScreenProps<
-  FeedStackParamList,
-  typeof feedNavigations.FEED_DETAIL
+type FeedDetailScreenProps = CompositeScreenProps<
+  StackScreenProps<FeedStackParamList, typeof feedNavigations.FEED_DETAIL>,
+  DrawerScreenProps<MainDrawerParamList>
 >;
 
 function FeedDetailScreen({route, navigation}: FeedDetailScreenProps) {
   const {id} = route.params;
   const {data: post, isPending, isError} = useGetPost(id);
   const insets = useSafeAreaInsets(); // {"bottom": 34, "left": 0, "right": 0, "top": 59} 이런식으로 나옴
+  const {setMoveLocation} = useLocationStore();
 
   if (isPending || isError) {
     return <></>;
   }
+
+  const handlePressLocation = () => {
+    const {latitude, longitude} = post;
+    // location을 받음
+    setMoveLocation({latitude, longitude});
+    navigation.navigate(mainNavigations.HOME, {
+      screen: mapNavigations.MAP_HOME,
+    });
+  };
 
   return (
     <>
@@ -138,7 +158,7 @@ function FeedDetailScreen({route, navigation}: FeedDetailScreenProps) {
             label="위치보기"
             size="medium"
             variant="filled"
-            onPress={() => {}}
+            onPress={handlePressLocation}
           />
         </View>
       </View>

@@ -1,5 +1,5 @@
 import {Alert, Pressable, StyleSheet, View} from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MapView, {
   Callout,
@@ -8,7 +8,7 @@ import MapView, {
   Marker,
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
-import {alerts, colors, mapNavigations} from '@/constants';
+import {alerts, colors, mapNavigations, numbers} from '@/constants';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {MapStackParamList} from '@/navigations/stack/MapStackNavigator';
@@ -23,6 +23,7 @@ import useGetMarkers from '@/hooks/queries/useGetMarkers';
 import useModal from '@/hooks/useModal';
 import CustomMarker from '@/components/common/CustomMarker';
 import MarkerModal from '@/components/map/MarkerModal';
+import useMoveMapView from '@/hooks/useMoveMapView';
 
 // Map스크린은 Stack도 되면서 Drawer도 되므로 스크린 타입을 합쳐줄 수 있음
 type Navigation = CompositeNavigationProp<
@@ -33,23 +34,13 @@ type Navigation = CompositeNavigationProp<
 function MapHomeScreen() {
   const inset = useSafeAreaInsets();
   const navigation = useNavigation<Navigation>();
-  const mapRef = useRef<MapView | null>(null);
   const {userLocation, isUserLocationError} = useUserLocation();
   const [selectLocation, setSelectLocation] = useState<LatLng | null>();
   const [markerId, setMarkerId] = useState<number | null>(null);
   const {data: markers = []} = useGetMarkers();
   const markerModal = useModal();
+  const {mapRef, moveMapView, handleChangeDelta} = useMoveMapView();
   usePermission('LOCATION');
-
-  const moveMapView = (coordinate: LatLng) => {
-    // 넣어준 곳으로 이동
-    mapRef.current?.animateToRegion({
-      ...coordinate,
-      // 확대 정도(델타)
-      latitudeDelta: 0.00522,
-      longitudeDelta: 0.000421,
-    });
-  };
 
   // 특정 마크 눌렀을 때 그 부분으로 이동(마커가 정 중앙에 오도록)
   const handlePressMarker = (id: number, coordinate: LatLng) => {
@@ -95,11 +86,11 @@ function MapHomeScreen() {
         showsMyLocationButton={false} // 내 위치 보여줌
         customMapStyle={mapStyle}
         onLongPress={handleLongPressMapView}
+        onRegionChangeComplete={handleChangeDelta} // 위치 or 확대 정도가 변경되었을 때, 마지막 상태 저장
         // 앱 초기에 보여줄 위치 설정
         region={{
           ...userLocation,
-          latitudeDelta: 0.00522,
-          longitudeDelta: 0.000421,
+          ...numbers.INITIAL_DELTA,
         }}>
         {markers.map(({id, color, score, ...coordinate}) => (
           <CustomMarker
