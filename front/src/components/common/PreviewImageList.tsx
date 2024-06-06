@@ -1,5 +1,7 @@
-import {colors} from '@/constants';
+import {colors, feedNavigations} from '@/constants';
+import {FeedStackParamList} from '@/navigations/stack/FeedStackNavigator';
 import {ImageUri} from '@/types';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Image, Pressable} from 'react-native';
 import {Platform, ScrollView, StyleSheet, View} from 'react-native';
@@ -10,6 +12,7 @@ interface PreviewImageListProps {
   onDelete?: (uri: string) => void;
   onChangeOrder?: (fromIndex: number, toIndex: number) => void;
   showOption?: boolean;
+  zoomEnable?: boolean;
 }
 
 function PreviewImageList({
@@ -17,62 +20,78 @@ function PreviewImageList({
   onDelete,
   onChangeOrder,
   showOption = false,
+  zoomEnable = false,
 }: PreviewImageListProps) {
+  const navigation = useNavigation<NavigationProp<FeedStackParamList>>();
+
+  const handlePressImage = (index: number) => {
+    if (zoomEnable) {
+      navigation.navigate(feedNavigations.IMAGE_ZOOM, {
+        index,
+      });
+    }
+  };
+
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <View style={styles.container}>
         {imageUris.map(({uri}, idx) => {
           return (
-            <Pressable key={idx} style={styles.imageContainer}>
-              <Image
-                resizeMode="cover"
-                source={{
-                  uri: `${
-                    Platform.OS === 'ios'
-                      ? 'http://localhost:3030'
-                      : 'http://10.0.2.2:3030'
-                  }/${uri}`,
-                }}
-                style={styles.image}
-              />
-              {showOption && (
-                <>
-                  <Pressable
-                    style={[styles.imageButton, styles.deleteButton]}
-                    onPress={() => onDelete && onDelete(uri)}>
-                    <Ionicons name="close" size={16} color={colors.WHITE} />
-                  </Pressable>
-
-                  {idx > 0 && (
+            <View>
+              <Pressable
+                key={idx}
+                onPress={() => handlePressImage(idx)}
+                style={styles.imageContainer}>
+                <Image
+                  resizeMode="cover"
+                  source={{
+                    uri: `${
+                      Platform.OS === 'ios'
+                        ? 'http://localhost:3030'
+                        : 'http://10.0.2.2:3030'
+                    }/${uri}`,
+                  }}
+                  style={styles.image}
+                />
+                {showOption && (
+                  <>
                     <Pressable
-                      style={[styles.imageButton, styles.moveLeftButton]}
-                      onPress={() =>
-                        onChangeOrder && onChangeOrder(idx, idx - 1)
-                      }>
-                      <Ionicons
-                        name="arrow-back-outline"
-                        size={16}
-                        color={colors.WHITE}
-                      />
+                      style={[styles.imageButton, styles.deleteButton]}
+                      onPress={() => onDelete && onDelete(uri)}>
+                      <Ionicons name="close" size={16} color={colors.WHITE} />
                     </Pressable>
-                  )}
 
-                  {idx < imageUris.length - 1 && (
-                    <Pressable
-                      style={[styles.imageButton, styles.moveRightButton]}
-                      onPress={() =>
-                        onChangeOrder && onChangeOrder(idx, idx + 1)
-                      }>
-                      <Ionicons
-                        name="arrow-forward-outline"
-                        size={16}
-                        color={colors.WHITE}
-                      />
-                    </Pressable>
-                  )}
-                </>
-              )}
-            </Pressable>
+                    {idx > 0 && (
+                      <Pressable
+                        style={[styles.imageButton, styles.moveLeftButton]}
+                        onPress={() =>
+                          onChangeOrder && onChangeOrder(idx, idx - 1)
+                        }>
+                        <Ionicons
+                          name="arrow-back-outline"
+                          size={16}
+                          color={colors.WHITE}
+                        />
+                      </Pressable>
+                    )}
+
+                    {idx < imageUris.length - 1 && (
+                      <Pressable
+                        style={[styles.imageButton, styles.moveRightButton]}
+                        onPress={() =>
+                          onChangeOrder && onChangeOrder(idx, idx + 1)
+                        }>
+                        <Ionicons
+                          name="arrow-forward-outline"
+                          size={16}
+                          color={colors.WHITE}
+                        />
+                      </Pressable>
+                    )}
+                  </>
+                )}
+              </Pressable>
+            </View>
           );
         })}
       </View>
