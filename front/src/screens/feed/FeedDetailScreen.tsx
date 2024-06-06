@@ -1,5 +1,6 @@
 import CustomButton from '@/components/common/CustomButton';
 import PreviewImageList from '@/components/common/PreviewImageList';
+import FeedDetailOption from '@/components/feed/FeedDetailOption';
 import {
   colorHex,
   colors,
@@ -8,6 +9,7 @@ import {
   mapNavigations,
 } from '@/constants';
 import useGetPost from '@/hooks/queries/useGetPost';
+import useModal from '@/hooks/useModal';
 import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
 import {FeedStackParamList} from '@/navigations/stack/FeedStackNavigator';
 import useLocationStore from '@/store/useLocationStore';
@@ -41,6 +43,7 @@ function FeedDetailScreen({route, navigation}: FeedDetailScreenProps) {
   const {data: post, isPending, isError} = useGetPost(id);
   const insets = useSafeAreaInsets(); // {"bottom": 34, "left": 0, "right": 0, "top": 59} 이런식으로 나옴
   const {setMoveLocation} = useLocationStore();
+  const detailOption = useModal();
 
   if (isPending || isError) {
     return <></>;
@@ -72,7 +75,12 @@ function FeedDetailScreen({route, navigation}: FeedDetailScreenProps) {
               color={colors.WHITE}
               onPress={() => navigation.goBack()}
             />
-            <Ionicons name="ellipsis-vertical" size={30} color={colors.WHITE} />
+            <Ionicons
+              name="ellipsis-vertical"
+              size={30}
+              color={colors.WHITE}
+              onPress={detailOption.show}
+            />
           </View>
         </SafeAreaView>
         <View style={styles.imageContainer}>
@@ -162,6 +170,11 @@ function FeedDetailScreen({route, navigation}: FeedDetailScreenProps) {
           />
         </View>
       </View>
+
+      <FeedDetailOption
+        isVisible={detailOption.isVisible}
+        hideOption={detailOption.hide}
+      />
     </>
   );
 }
