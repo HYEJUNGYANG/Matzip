@@ -42,6 +42,7 @@ function ImageCarousel({images, pressedIndex = 0}: ImageCarouselProps) {
         onPress={() => navigation.goBack()}>
         <Octicons name="arrow-left" size={30} color={colors.WHITE} />
       </Pressable>
+
       <FlatList
         data={images}
         renderItem={({item}) => (

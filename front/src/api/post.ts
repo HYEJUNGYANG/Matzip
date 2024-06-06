@@ -48,7 +48,29 @@ const updatePost = async ({
   return data;
 };
 
-export {createPost, getPost, getPosts, deletePost, updatePost};
+// 즐겨찾기 한 게시물만 불러오는 api
+const getFavoritePosts = async (page = 1): Promise<ResponsePost[]> => {
+  const {data} = await axiosInstance.get(`/favorites/my?page=${page}`);
+
+  return data;
+};
+
+// return 값으로 즐겨찾기에 추가된 id가 오게됨
+const updateFavoritePost = async (id: number): Promise<number> => {
+  const {data} = await axiosInstance.post(`/favorites/${id}`);
+
+  return data;
+};
+
+export {
+  createPost,
+  getPost,
+  getPosts,
+  deletePost,
+  updatePost,
+  getFavoritePosts,
+  updateFavoritePost,
+};
 export type {
   ResponsePost,
   RequestCreatePost,
