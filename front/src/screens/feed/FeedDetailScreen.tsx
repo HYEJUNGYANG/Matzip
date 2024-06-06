@@ -12,12 +12,13 @@ import useGetPost from '@/hooks/queries/useGetPost';
 import useModal from '@/hooks/useModal';
 import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
 import {FeedStackParamList} from '@/navigations/stack/FeedStackNavigator';
+import useDetailStore from '@/store/useDetailPostStore';
 import useLocationStore from '@/store/useLocationStore';
 import {getDateLocaleFormat, getDateWithSeparator} from '@/utils';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Dimensions,
   Image,
@@ -43,7 +44,12 @@ function FeedDetailScreen({route, navigation}: FeedDetailScreenProps) {
   const {data: post, isPending, isError} = useGetPost(id);
   const insets = useSafeAreaInsets(); // {"bottom": 34, "left": 0, "right": 0, "top": 59} 이런식으로 나옴
   const {setMoveLocation} = useLocationStore();
+  const {setDetailPost} = useDetailStore();
   const detailOption = useModal();
+
+  useEffect(() => {
+    post && setDetailPost(post);
+  }, [post]);
 
   if (isPending || isError) {
     return <></>;
