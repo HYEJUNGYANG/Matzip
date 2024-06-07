@@ -22,6 +22,14 @@ function useMutateUpdatePost(mutationOptions?: UseMutationCustomOptions) {
         [queryKeys.POST, queryKeys.GET_POST, newPost.id],
         newPost,
       );
+      // 피드 리스트 페이지
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.POST, queryKeys.GET_POSTS],
+      });
+      // 캘린더 페이지
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.POST, queryKeys.GET_CALENDAR_POST],
+      });
     },
     ...mutationOptions,
   });

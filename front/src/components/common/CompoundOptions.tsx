@@ -9,7 +9,6 @@ import {
   useState,
 } from 'react';
 import {
-  Animated,
   GestureResponderEvent,
   Modal,
   ModalProps,

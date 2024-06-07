@@ -38,6 +38,10 @@ function useMutateCreatePost(mutationOptions?: UseMutationCustomOptions) {
             : [newMarker];
         },
       );
+
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.POST, queryKeys.GET_CALENDAR_POST],
+      });
     },
     ...mutationOptions,
   });

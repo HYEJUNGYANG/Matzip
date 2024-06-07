@@ -25,6 +25,11 @@ function useMutateDeletePost(mutationOptions?: UseMutationCustomOptions) {
       //       return existingMarkers?.filter(marker => marker.id !== deleteId);
       //     },
       //   );
+
+      // 삭제된 포스트가 캘린더에서도 반영되도록
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.POST, queryKeys.GET_CALENDAR_POST],
+      });
     },
     ...mutationOptions,
   });
