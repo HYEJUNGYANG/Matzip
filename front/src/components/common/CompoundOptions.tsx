@@ -1,13 +1,5 @@
 import {colors} from '@/constants';
-import {
-  PropsWithChildren,
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import {PropsWithChildren, ReactNode, createContext, useContext} from 'react';
 import {
   GestureResponderEvent,
   Modal,
