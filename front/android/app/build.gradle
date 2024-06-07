@@ -123,4 +123,9 @@ apply from: file("../../node_modules/@react-native-community/cli-platform-androi
 project.ext.vectoricons = [
     iconFontNames: [ 'MaterialIcons.ttf', 'Ionicons.ttf', 'Octicons.ttf' ]
 ]
+
+project.ext.react = [
+    enableHermes: false  // Hermes를 비활성화합니다.
+]
+
 apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
