@@ -26,9 +26,14 @@ function useMutateUpdatePost(mutationOptions?: UseMutationCustomOptions) {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.POST, queryKeys.GET_POSTS],
       });
-      // 캘린더 페이지
+      // 해당 달에 대한 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.POST, queryKeys.GET_CALENDAR_POST],
+        queryKey: [
+          queryKeys.POST,
+          queryKeys.GET_CALENDAR_POST,
+          new Date(newPost.date).getFullYear(),
+          new Date(newPost.date).getMonth() + 1,
+        ],
       });
     },
     ...mutationOptions,
