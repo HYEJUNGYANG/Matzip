@@ -24,6 +24,7 @@ import useModal from '@/hooks/useModal';
 import CustomMarker from '@/components/common/CustomMarker';
 import MarkerModal from '@/components/map/MarkerModal';
 import useMoveMapView from '@/hooks/useMoveMapView';
+import Toast from 'react-native-toast-message';
 
 // Map스크린은 Stack도 되면서 Drawer도 되므로 스크린 타입을 합쳐줄 수 있음
 type Navigation = CompositeNavigationProp<
@@ -69,7 +70,11 @@ function MapHomeScreen() {
 
   const handlePressUserLocation = () => {
     if (isUserLocationError) {
-      // 에러 메세지 표시
+      Toast.show({
+        type: 'error',
+        text1: '위치 권한을 허용해주세요.',
+        position: 'bottom',
+      });
       return;
     }
     moveMapView(userLocation);

@@ -5,6 +5,8 @@ import {validateSignup} from '@/utils';
 import useAuth from '@/hooks/queries/useAuth';
 import InputField from '@/components/common/InputField';
 import CustomButton from '@/components/common/CustomButton';
+import Toast from 'react-native-toast-message';
+import {errorMessages} from '@/constants';
 
 function SignupScreen() {
   const passwordRef = useRef<TextInput | null>(null);
@@ -16,8 +18,6 @@ function SignupScreen() {
   });
 
   const handleSubmit = () => {
-    console.log('회원가입 버튼클릭 ', signup.values);
-
     // passwordConfirm은 제외시키기 위해서
     const {email, password} = signup.values;
     signupMutation.mutate(
@@ -25,6 +25,14 @@ function SignupScreen() {
       {
         // 회원가입 성공했을 때 바로 로그인 할 수 있도록
         onSuccess: () => loginMutation.mutate({email, password}),
+        onError: error =>
+          Toast.show({
+            type: 'error',
+            // 서버에서 보내주는 메세지가 없을 경우를 대비해서 (오른쪽)
+            text1: error.response?.data.message || errorMessages.UNEXPECT_ERROR,
+            position: 'bottom',
+            visibilityTime: 2000,
+          }),
       },
     );
   };
